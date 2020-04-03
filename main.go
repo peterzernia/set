@@ -2,14 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gorilla/websocket"
-	"github.com/peterzernia/set/deck"
 	"github.com/peterzernia/set/game"
 	"github.com/peterzernia/set/message"
 	"github.com/peterzernia/set/ptr"
@@ -27,18 +25,6 @@ type Context struct {
 
 func main() {
 	context := Context{}
-	context.Game = game.New()
-
-	context.Game.Refresh()
-
-	cards := context.Game.InPlay[0][0:3]
-	move := game.Move{Cards: cards}
-	err := context.Game.Play(move)
-	if err != nil {
-		fmt.Println(err)
-	}
-	context.Game.Refresh()
-	context.Game.AddCards()
 
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		upgrader.CheckOrigin = func(r *http.Request) bool { return true }
@@ -57,6 +43,7 @@ func main() {
 			}
 
 			err = json.Unmarshal(msg, &message)
+
 			if err != nil {
 				fmt.Println(err.Error())
 			}
@@ -64,8 +51,7 @@ func main() {
 			var res []byte
 			switch message.Type {
 			case "player":
-				player := context.handlePlayer(message)
-				context.Game.Players = append(context.Game.Players, player)
+				context.handlePlayer(message)
 				res, _ = json.Marshal(context.Game)
 			case "move":
 				context.handleMove(message)
@@ -88,7 +74,11 @@ func main() {
 	log.Fatal(http.ListenAndServe(port, nil))
 }
 
-func (c Context) handlePlayer(message message.Message) game.Player {
+func (c *Context) handlePlayer(message message.Message) {
+	if c.Game == nil {
+		c.Game = game.New()
+	}
+
 	player := game.Player{}
 	player.ID = ptr.Int64(int64(len(c.Game.Players)) + 1)
 	player.Request = ptr.Bool(false)
@@ -99,15 +89,19 @@ func (c Context) handlePlayer(message message.Message) game.Player {
 	}
 
 	c.Game.Players = append(c.Game.Players, player)
-	return player
+	return
 }
 
 func (c *Context) handleMove(message message.Message) error {
-	if cards, ok := message.Payload["cards"].([]deck.Card); ok {
-		valid, err := c.Game.Deck.CheckSet(cards)
-		if !valid || err != nil {
-			return errors.New("Invalid set")
-		}
+	move := game.Move{}
+	j, _ := json.Marshal(message.Payload)
+	json.Unmarshal(j, &move)
+
+	err := c.Game.Play(&move)
+	if err != nil {
+		fmt.Println(err.Error())
+		return err
 	}
+
 	return nil
 }

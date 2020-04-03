@@ -4,11 +4,12 @@ import (
 	"errors"
 
 	"github.com/peterzernia/set/deck"
+	"github.com/peterzernia/set/ptr"
 )
 
 // Game represents a Set game
 type Game struct {
-	Deck    deck.Deck     `json:"-"`
+	Deck    *deck.Deck    `json:"-"`
 	InPlay  [][]deck.Card `json:"in_play,omitempty"`
 	Players []Player      `json:"players,omitempty"`
 	Winner  *Player       `json:"winner,omitempty"`
@@ -35,7 +36,7 @@ func (g *Game) Deal() {
 }
 
 // Play plays a play
-func (g *Game) Play(move Move) error {
+func (g *Game) Play(move *Move) error {
 	valid, err := g.Deck.CheckSet(move.Cards)
 	if !valid || err != nil {
 		return errors.New("Invalid set")
@@ -48,14 +49,20 @@ func (g *Game) Play(move Move) error {
 		indices = append(indices, i)
 	}
 
+	// -1 index signifies that the card is not in play
 	for _, v := range indices {
 		if v[0] == -1 || v[1] == -1 {
 			return errors.New("Invalid cards")
 		}
 	}
+
+	// Replace the found set with new cards
 	for _, v := range indices {
 		g.InPlay[v[0]][v[1]] = deck.Card{}
 	}
+
+	// Give the player a point
+	g.Players[*move.PlayerID-1].Score = ptr.Int64(*g.Players[*move.PlayerID-1].Score + 1)
 
 	return nil
 }

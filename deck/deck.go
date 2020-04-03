@@ -14,7 +14,7 @@ type Deck struct {
 }
 
 // New creates a new deck
-func New() Deck {
+func New() *Deck {
 	rand.Seed(time.Now().UnixNano())
 
 	deck := Deck{}
@@ -38,7 +38,7 @@ func New() Deck {
 
 	deck.Cards = cards
 	// deck.Shuffle()
-	return deck
+	return &deck
 }
 
 // Shuffle uses Knuth shuffle algo to randomize the deck in O(n) time
