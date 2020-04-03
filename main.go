@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/websocket"
 	"github.com/peterzernia/set/deck"
@@ -80,7 +82,10 @@ func main() {
 			}
 		}
 	})
-	http.ListenAndServe(":3000", nil)
+
+	port := ":" + os.Getenv("PORT")
+	fmt.Println("Running server on port " + port)
+	log.Fatal(http.ListenAndServe(port, nil))
 }
 
 func (c Context) handlePlayer(message message.Message) game.Player {
