@@ -1,3 +1,6 @@
 gin-bin
 .env
 set
+/client/node_modules
+/client/build
+/client/coverage

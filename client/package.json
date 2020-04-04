@@ -1,0 +1,49 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "author": "peterzernia",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "./node_modules/.bin/jest --coverage",
+    "start": "webpack-dev-server --mode development --hot --inline --port 3000 --history-api-fallback --host 0.0.0.0 --env.REACT_APP_API_URL=$REACT_APP_API_URL",
+    "build": "webpack --mode=production --env.REACT_APP_API_URL=$REACT_APP_API_URL",
+    "lint": "./node_modules/.bin/eslint --fix './**/*.{ts,tsx,js}'"
+  },
+  "dependencies": {
+    "@types/react": "^16.9.2",
+    "@types/react-dom": "^16.9.0",
+    "core-js": "^3.4.2",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "regenerator-runtime": "^0.13.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.6.0",
+    "@types/jest": "^24.0.18",
+    "@typescript-eslint/eslint-plugin": "^2.8.0",
+    "@typescript-eslint/parser": "^2.2.0",
+    "babel-loader": "^8.0.6",
+    "babel-plugin-module-resolver": "^3.2.0",
+    "css-loader": "^3.2.0",
+    "eslint": "^6.3.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^22.17.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-react-hooks": "^1.7.0",
+    "html-webpack-plugin": "^3.2.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^24.9.0",
+    "style-loader": "^1.0.0",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.6.3",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.8",
+    "webpack-dev-server": "^3.8.0"
+  }
+}
