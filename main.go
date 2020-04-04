@@ -50,8 +50,8 @@ func main() {
 
 			var res []byte
 			switch message.Type {
-			case "player":
-				context.handlePlayer(message)
+			case "join":
+				context.handleJoin(message)
 				res, _ = json.Marshal(context.Game)
 			case "move":
 				context.handleMove(message)
@@ -74,7 +74,7 @@ func main() {
 	log.Fatal(http.ListenAndServe(port, nil))
 }
 
-func (c *Context) handlePlayer(message message.Message) {
+func (c *Context) handleJoin(message message.Message) {
 	if c.Game == nil {
 		c.Game = game.New()
 	}

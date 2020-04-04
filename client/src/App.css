@@ -3,6 +3,10 @@
     display: flex;
 }
 
+.join {
+    margin: auto;
+}
+
 .board {
     display: inline-block;
     margin: auto;
@@ -17,8 +21,10 @@
     width: 100px;
     height: 150px;
     border: 1px solid black;
+    box-shadow: 3px 3px 3px lightgray;
+    cursor: pointer;
     margin: 4px;
-    padding: 48px 0px;
+    padding: 24px 0px;
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -27,7 +33,7 @@
 }
   
 svg {
-    stroke-width: 5;
+    stroke-width: 4;
     width: 300px;
     height: 100px;
     margin: -30px;
