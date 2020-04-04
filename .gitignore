@@ -4,3 +4,4 @@ set
 /client/node_modules
 /client/build
 /client/coverage
+.DS_Store
