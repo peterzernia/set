@@ -1,0 +1,82 @@
+.app {
+    width: 100%;
+    display: flex;
+}
+
+.board {
+    display: inline-block;
+    margin: auto;
+}
+
+.row {
+    display: flex;
+}
+
+.card {
+    box-sizing: border-box;
+    width: 100px;
+    height: 150px;
+    border: 1px solid black;
+    margin: 4px;
+    padding: 48px 0px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+  
+svg {
+    stroke-width: 5;
+    width: 300px;
+    height: 100px;
+    margin: -30px;
+}
+
+.red-solid {
+    stroke: red;
+    fill: red;
+}
+
+.red-outlined {
+    stroke: red;
+    fill: none;
+}
+
+.red-striped {
+    stroke: red;
+    fill: red;
+    fill-opacity: 0.3;
+}
+
+.purple-solid {
+    stroke: purple;
+    fill: purple;
+}
+
+.purple-outlined {
+    stroke: purple;
+    fill: none;
+}
+
+.purple-striped {
+    stroke: purple;
+    fill: purple;
+    fill-opacity: 0.3;
+}
+
+.green-solid {
+    stroke: green;
+    fill: green;
+}
+
+.green-outlined {
+    stroke: green;
+    fill: none;
+}
+
+.green-striped {
+    stroke: green;
+    fill: green;
+    fill-opacity: 0.3;
+}

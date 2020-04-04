@@ -1,5 +1,7 @@
 import * as React from 'react'
-import { Data, Player } from 'types'
+import { Data } from 'types'
+import Board from 'components/Board'
+import './App.css'
 
 const ws = new WebSocket('ws://localhost:8002/ws')
 
@@ -17,14 +19,12 @@ export default function App(): React.ReactElement {
   }, [])
 
   return (
-    <div>
+    <div className="app">
       {
         data
-          ? data.players.map((player: Player) => (
-            <div key={player.id}>
-              {`${player.name}: ${player.score}`}
-            </div>
-          )) : (
+          ? (
+            <Board data={data} />
+          ) : (
             <>
               <input
                 onChange={(e): void => setValue(e.target.value)}

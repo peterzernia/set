@@ -26,7 +26,11 @@ module.exports = (env) => ({
           'style-loader',
           'css-loader',
         ],
-      },    
+      },
+      {
+        test: /\.svg$/,
+        use: ['@svgr/webpack'],
+      }, 
     ],
   },
   plugins: [

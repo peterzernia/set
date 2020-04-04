@@ -3,7 +3,7 @@ package deck
 // Constants for colors
 const (
 	RED int64 = iota
-	BLUE
+	PURPLE
 	GREEN
 )
 
@@ -31,7 +31,7 @@ const (
 // Global variables representing default colors, shapes and numbers
 // for the cards in a Set deck
 var (
-	COLORS   = []int64{RED, BLUE, GREEN}
+	COLORS   = []int64{RED, PURPLE, GREEN}
 	SHAPES   = []int64{DIAMOND, OVAL, SQUIGGLE}
 	NUMBERS  = []int64{ONE, TWO, THREE}
 	SHADINGS = []int64{OUTLINED, STRIPED, SOLID}

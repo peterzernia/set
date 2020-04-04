@@ -32,7 +32,8 @@ module.exports = {
     "semi": ['error', 'never', { 'beforeStatementContinuationChars': 'always'}],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx", ".ts", ".tsx"] }]
+    "react/jsx-filename-extension": ["error", { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
+    "@typescript-eslint/camelcase": 0,
   },
   settings: {
     'import/resolver': {
