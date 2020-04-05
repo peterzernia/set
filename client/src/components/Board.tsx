@@ -6,11 +6,12 @@ import Empty from './Empty'
 type Props = {
   data: Data;
   handleMove: (cards: CardType[]) => void;
+  handleRequest: () => void;
 }
 
 export default function Board(props: Props): React.ReactElement {
   const [selected, setSelected] = React.useState<Card[]>([])
-  const { data, handleMove } = props
+  const { data, handleMove, handleRequest } = props
   const { in_play, players } = data
 
   const handleClick = (card: Card): void => {
@@ -49,9 +50,15 @@ export default function Board(props: Props): React.ReactElement {
           }
         </div>
       ))}
+      <button
+        type="button"
+        onClick={(): void => handleRequest()}
+      >
+        Request more cards
+      </button>
       {players.map((player: Player) => (
         <div key={player.id}>
-          {`${player.name}: ${player.score}`}
+          {`${player.name}: ${player.score} ${player.request ? 'Requested more cards' : ''}`}
         </div>
       ))}
     </div>

@@ -35,6 +35,7 @@ export default function Card(props: Props): React.ReactElement {
       throw new Error('Undefined shape')
   }
   const elements = [...Array(number + 1).keys()].map(() => element)
+
   return (
     <div
       className={`card ${selected ? 'selected' : ''}`}

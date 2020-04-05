@@ -35,6 +35,12 @@ export default function App(): React.ReactElement {
     }))
   }
 
+  const handleRequest = (): void => {
+    ws.send(JSON.stringify({
+      type: 'request',
+    }))
+  }
+
   const handleNew = (): void => {
     ws.send(JSON.stringify({
       type: 'new',
@@ -49,20 +55,20 @@ export default function App(): React.ReactElement {
 
     return (
       <div className="app">
-        <div>Game Over</div>
-        <div>{`Winner: ${winners.join('& ')}`}</div>
-        <button type="button" onClick={(): void => handleNew()}>Play again?</button>
+        <div className="game-over">
+          <div>Game Over</div>
+          <div>{`Winner: ${winners.join('& ')}`}</div>
+          <button type="button" onClick={(): void => handleNew()}>Play again?</button>
+        </div>
       </div>
     )
   }
 
   return (
     <div className="app">
-      {
-        data
-          ? <Board data={data} handleMove={handleMove} />
-          : <Join handleJoin={handleJoin} />
-      }
+      { data
+        ? <Board data={data} handleMove={handleMove} handleRequest={handleRequest} />
+        : <Join handleJoin={handleJoin} /> }
     </div>
   )
 }

@@ -72,6 +72,9 @@ func main() {
 			case "move":
 				context.handleMove(message, conn)
 				res, _ = json.Marshal(context.Game)
+			case "request":
+				context.handleRequest(conn)
+				res, _ = json.Marshal(context.Game)
 			case "new":
 				context.handleNew()
 				res, _ = json.Marshal(context.Game)
@@ -111,7 +114,7 @@ func main() {
 }
 
 func (c *Context) handleJoin(message message.Message, conn *websocket.Conn) *int64 {
-	if c.Game == nil {
+	if c.Game == nil || c.Game.GameOver != nil && *c.Game.GameOver {
 		c.Game = game.New()
 	}
 
@@ -145,6 +148,28 @@ func (c *Context) handleMove(message message.Message, conn *websocket.Conn) erro
 	}
 
 	return nil
+}
+
+func (c *Context) handleRequest(conn *websocket.Conn) {
+	for i, v := range c.Game.Players {
+		if v.Conn == conn {
+			c.Game.Players[i].Request = ptr.Bool(true)
+		}
+	}
+
+	request := true
+	for _, v := range c.Game.Players {
+		if !*v.Request {
+			request = false
+		}
+	}
+
+	if request && c.Game.Deck.Cards != nil && len(c.Game.Deck.Cards) > 0 {
+		c.Game.AddCards()
+		for i := range c.Game.Players {
+			c.Game.Players[i].Request = ptr.Bool(false)
+		}
+	}
 }
 
 func (c *Context) handleNew() {

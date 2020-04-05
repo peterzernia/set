@@ -7,6 +7,10 @@
     margin: auto;
 }
 
+.game-over {
+    margin: auto;
+}
+
 .board {
     display: inline-block;
     margin: auto;

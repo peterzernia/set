@@ -58,9 +58,19 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) (bool, error) {
 		}
 	}
 
-	// Replace the found set with new cards
+	inPlay := 0
+	for _, row := range g.InPlay {
+		for _, card := range row {
+			if card.Color != nil {
+				inPlay++
+			}
+		}
+	}
+
+	// Replace the found set with new cards if there aren't
+	// 12 (+3 about to be removed) cards already in play
 	for _, v := range indices {
-		if len(g.Deck.Cards) > 0 {
+		if len(g.Deck.Cards) > 0 && inPlay < 15 {
 			g.InPlay[v[0]][v[1]] = g.Deck.Cards[0]
 			g.Deck.Cards = g.Deck.Cards[1:]
 		} else {
@@ -104,12 +114,27 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) (bool, error) {
 }
 
 // AddCards adds another 3 cards onto the game board
-// when there are no more sets left
 func (g *Game) AddCards() {
-	// TODO only add set when all players have requested
-	for i := range g.InPlay {
-		g.InPlay[i] = append(g.InPlay[i], g.Deck.Cards[0])
-		g.Deck.Cards = g.Deck.Cards[1:]
+	cards := g.Deck.Cards[0:3]
+	g.Deck.Cards = g.Deck.Cards[3:]
+
+	// Fill in the spaces
+	for i, row := range g.InPlay {
+		for j, v := range row {
+			if len(cards) > 0 {
+				if v.Color == nil {
+					g.InPlay[i][j] = cards[0]
+					cards = cards[1:]
+				}
+			}
+		}
+	}
+
+	// Start a new column if there are no more spaces
+	if len(cards) > 0 {
+		g.InPlay[0] = append(g.InPlay[0], cards[0])
+		g.InPlay[1] = append(g.InPlay[1], cards[1])
+		g.InPlay[2] = append(g.InPlay[2], cards[2])
 	}
 }
 
