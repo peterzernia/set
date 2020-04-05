@@ -2,7 +2,6 @@ package game
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/peterzernia/set/deck"
 	"github.com/peterzernia/set/ptr"
@@ -63,7 +62,6 @@ func (g *Game) Play(move *Move) error {
 	// Replace the found set with new cards
 	for _, v := range indices {
 		if len(g.Deck.Cards) > 0 {
-			fmt.Println(len(g.Deck.Cards))
 			g.Deck.Cards = g.Deck.Cards[1:]
 			g.InPlay[v[0]][v[1]] = g.Deck.Cards[0]
 		} else {

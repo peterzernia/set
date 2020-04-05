@@ -46,27 +46,32 @@ func main() {
 			message := message.Message{}
 			_, msg, err := conn.ReadMessage()
 			if err != nil {
-				fmt.Println(err)
+				log.Printf("Websocket error: %s", err)
 				return
 			}
 
 			err = json.Unmarshal(msg, &message)
 
 			if err != nil {
-				fmt.Println(err.Error())
+				log.Printf("Websocket error: %s", err)
+			}
+
+			// Reset game when there are no connections
+			if len(clients) == 0 {
+				context.Game = nil
 			}
 
 			var res []byte
 			switch message.Type {
 			case "join":
-				context.handleJoin(message)
+				context.handleJoin(message, conn)
 				res, _ = json.Marshal(context.Game)
 			case "move":
 				context.handleMove(message)
 				res, _ = json.Marshal(context.Game)
 			default:
 				res = []byte("Unrecognized message type" + message.Type)
-				fmt.Println("Unrecognized message type" + message.Type)
+				log.Println("Unrecognized message type" + message.Type)
 			}
 
 			// send to every client that is currently connected
@@ -76,6 +81,15 @@ func main() {
 					log.Printf("Websocket error: %s", err)
 					client.Close()
 					delete(clients, client)
+
+					var index int
+					for i, v := range context.Game.Players {
+						if v.Conn == conn {
+							index = i
+						}
+					}
+
+					context.Game.Players = append(context.Game.Players[:index], context.Game.Players[index+1:]...)
 				}
 			}
 		}
@@ -86,13 +100,14 @@ func main() {
 	log.Fatal(http.ListenAndServe(port, nil))
 }
 
-func (c *Context) handleJoin(message message.Message) {
+func (c *Context) handleJoin(message message.Message, conn *websocket.Conn) *int64 {
 	if c.Game == nil {
 		c.Game = game.New()
 	}
 
 	player := game.Player{}
 	player.ID = ptr.Int64(int64(len(c.Game.Players)) + 1)
+	player.Conn = conn
 	player.Request = ptr.Bool(false)
 	player.Score = ptr.Int64(0)
 
@@ -101,7 +116,7 @@ func (c *Context) handleJoin(message message.Message) {
 	}
 
 	c.Game.Players = append(c.Game.Players, player)
-	return
+	return player.ID
 }
 
 func (c *Context) handleMove(message message.Message) error {
