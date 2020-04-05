@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Data } from 'types'
+import { Data, Move } from 'types'
 import Board from 'components/Board'
 import Join from 'components/Join'
 import './App.css'
@@ -27,11 +27,19 @@ export default function App(): React.ReactElement {
     }))
   }
 
+  const handleMove = (cards: Card[]): void => {
+    const move: Move = { cards, player_id: 1 }
+    ws.send(JSON.stringify({
+      type: 'move',
+      payload: move,
+    }))
+  }
+
   return (
     <div className="app">
       {
         data
-          ? <Board data={data} />
+          ? <Board data={data} handleMove={handleMove} />
           : <Join handleJoin={handleJoin} />
       }
     </div>

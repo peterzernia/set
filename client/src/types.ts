@@ -16,3 +16,8 @@ type Data = {
   in_play: Card[][];
   players: Player[];
 }
+
+type Move = {
+  cards: Card[];
+  player_id: number;
+}

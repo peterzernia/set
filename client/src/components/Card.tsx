@@ -7,10 +7,12 @@ import Squiggle from './Squiggle'
 
 type Props = {
   card: CardType;
+  onClick: () => void;
+  selected: boolean;
 }
 
 export default function Card(props: Props): React.ReactElement {
-  const { card } = props
+  const { card, onClick, selected } = props
   const {
     color,
     shape,
@@ -34,7 +36,13 @@ export default function Card(props: Props): React.ReactElement {
   }
   const elements = [...Array(number + 1).keys()].map(() => element)
   return (
-    <div className="card">
+    <div
+      className={`card ${selected ? 'selected' : ''}`}
+      onClick={onClick}
+      onKeyDown={onClick}
+      role="button"
+      tabIndex={0}
+    >
       {elements}
     </div>
   )
