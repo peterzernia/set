@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Data, Move } from 'types'
+import { Data, Move, Player } from 'types'
 import Board from 'components/Board'
 import Join from 'components/Join'
 import './App.css'
@@ -33,6 +33,27 @@ export default function App(): React.ReactElement {
       type: 'move',
       payload: move,
     }))
+  }
+
+  const handleNew = (): void => {
+    ws.send(JSON.stringify({
+      type: 'new',
+    }))
+  }
+
+  if (data && data.game_over) {
+    const highScore = Math.max(...data.players.map((p: Player) => p.score))
+    const winners = data.players.filter(
+      (p: Player) => p.score === highScore,
+    ).map((p: Player) => p.name)
+
+    return (
+      <div className="app">
+        <div>Game Over</div>
+        <div>{`Winner: ${winners.join('& ')}`}</div>
+        <button type="button" onClick={(): void => handleNew()}>Play again?</button>
+      </div>
+    )
   }
 
   return (

@@ -10,10 +10,10 @@ import (
 
 // Game represents a Set game
 type Game struct {
-	Deck    *deck.Deck    `json:"-"`
-	InPlay  [][]deck.Card `json:"in_play,omitempty"`
-	Players []Player      `json:"players,omitempty"`
-	Winner  *Player       `json:"winner,omitempty"`
+	Deck     *deck.Deck    `json:"-"`
+	GameOver *bool         `json:"game_over,omitempty"`
+	InPlay   [][]deck.Card `json:"in_play,omitempty"`
+	Players  []Player      `json:"players,omitempty"`
 }
 
 // New initializes a game
@@ -37,11 +37,11 @@ func (g *Game) Deal() {
 }
 
 // Play plays a play
-func (g *Game) Play(move *Move, conn *websocket.Conn) error {
+func (g *Game) Play(move *Move, conn *websocket.Conn) (bool, error) {
 	valid, err := g.Deck.CheckSet(move.Cards)
 	if !valid || err != nil {
 		g.UpdateScore(conn, -1)
-		return errors.New("Invalid set")
+		return false, errors.New("Invalid set")
 	}
 
 	// Find the location of the 3 cards in the cards in play matrix
@@ -54,7 +54,7 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) error {
 	// -1 index signifies that the card is not in play
 	for _, v := range indices {
 		if v[0] == -1 || v[1] == -1 {
-			return errors.New("Invalid cards")
+			return false, errors.New("Invalid cards")
 		}
 	}
 
@@ -71,7 +71,36 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) error {
 	// Give the player a point
 	g.UpdateScore(conn, 1)
 
-	return nil
+	// If there are no cards left, check if there are any
+	// remaining sets on the board, if not the game is over
+	if len(g.Deck.Cards) == 0 {
+		cards := g.InPlay[0]
+		cards = append(cards, g.InPlay[1]...)
+		cards = append(cards, g.InPlay[2]...)
+
+		notEnd := false
+		for i, x := range cards {
+			for j, y := range cards {
+				for k, z := range cards {
+					if i != j && i != k && j == k &&
+						x.Color != nil &&
+						y.Color != nil &&
+						z.Color != nil {
+						valid, _ := g.Deck.CheckSet([]deck.Card{x, y, z})
+						if !valid {
+							notEnd = true
+						}
+					}
+				}
+			}
+		}
+
+		if !notEnd {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }
 
 // AddCards adds another 3 cards onto the game board

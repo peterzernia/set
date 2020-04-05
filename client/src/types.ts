@@ -13,6 +13,7 @@ type Card = {
 }
 
 type Data = {
+  game_over?: boolean;
   in_play: Card[][];
   players: Player[];
 }

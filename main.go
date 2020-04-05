@@ -72,6 +72,9 @@ func main() {
 			case "move":
 				context.handleMove(message, conn)
 				res, _ = json.Marshal(context.Game)
+			case "new":
+				context.handleNew()
+				res, _ = json.Marshal(context.Game)
 			default:
 				res = []byte("Unrecognized message type" + message.Type)
 				log.Println("Unrecognized message type" + message.Type)
@@ -131,11 +134,26 @@ func (c *Context) handleMove(message message.Message, conn *websocket.Conn) erro
 	j, _ := json.Marshal(message.Payload)
 	json.Unmarshal(j, &move)
 
-	err := c.Game.Play(&move, conn)
+	end, err := c.Game.Play(&move, conn)
 	if err != nil {
 		fmt.Println(err.Error())
 		return err
 	}
 
+	if end {
+		c.Game.GameOver = ptr.Bool(true)
+	}
+
 	return nil
+}
+
+func (c *Context) handleNew() {
+	players := c.Game.Players
+
+	for i := range players {
+		players[i].Score = ptr.Int64(0)
+	}
+
+	c.Game = game.New()
+	c.Game.Players = players
 }
