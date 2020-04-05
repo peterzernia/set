@@ -21,7 +21,7 @@ var upgrader = websocket.Upgrader{
 // Keeps track of all connections
 var clients = make(map[*websocket.Conn]bool)
 
-// Context contains necessary clients throught the application
+// Context contains necessary clients throughout the application
 type Context struct {
 	Game *game.Game
 }
@@ -32,11 +32,19 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("./client/build")))
 
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
-		upgrader.CheckOrigin = func(r *http.Request) bool { return true }
+		if os.Getenv("env") == "development" {
+			upgrader.CheckOrigin = func(r *http.Request) bool { return true }
+		}
+
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
 			log.Printf("Websocket error: %s", err)
 			return
+		}
+
+		// Reset game when there are no connections
+		if len(clients) == 0 {
+			context.Game = nil
 		}
 
 		// Register client
@@ -54,11 +62,6 @@ func main() {
 
 			if err != nil {
 				log.Printf("Websocket error: %s", err)
-			}
-
-			// Reset game when there are no connections
-			if len(clients) == 0 {
-				context.Game = nil
 			}
 
 			var res []byte
@@ -91,7 +94,9 @@ func main() {
 						}
 					}
 
-					context.Game.Players = append(context.Game.Players[:index], context.Game.Players[index+1:]...)
+					if context.Game.Players != nil && len(context.Game.Players) > 0 {
+						context.Game.Players = append(context.Game.Players[:index], context.Game.Players[index+1:]...)
+					}
 				}
 			}
 		}
