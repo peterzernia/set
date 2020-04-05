@@ -18,6 +18,9 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
+// Keeps track of all connections
+var clients = make(map[*websocket.Conn]bool)
+
 // Context contains necessary clients throught the application
 type Context struct {
 	Game *game.Game
@@ -26,17 +29,22 @@ type Context struct {
 func main() {
 	context := Context{}
 
+	http.Handle("/", http.FileServer(http.Dir("./client/build")))
+
 	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			fmt.Println(err)
+			log.Printf("Websocket error: %s", err)
 			return
 		}
 
+		// Register client
+		clients[conn] = true
+
 		for {
 			message := message.Message{}
-			msgType, msg, err := conn.ReadMessage()
+			_, msg, err := conn.ReadMessage()
 			if err != nil {
 				fmt.Println(err)
 				return
@@ -61,10 +69,14 @@ func main() {
 				fmt.Println("Unrecognized message type" + message.Type)
 			}
 
-			err = conn.WriteMessage(msgType, res)
-			if err != nil {
-				fmt.Println(err)
-				return
+			// send to every client that is currently connected
+			for client := range clients {
+				err := client.WriteMessage(websocket.TextMessage, res)
+				if err != nil {
+					log.Printf("Websocket error: %s", err)
+					client.Close()
+					delete(clients, client)
+				}
 			}
 		}
 	})

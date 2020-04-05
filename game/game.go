@@ -40,6 +40,9 @@ func (g *Game) Deal() {
 func (g *Game) Play(move *Move) error {
 	valid, err := g.Deck.CheckSet(move.Cards)
 	if !valid || err != nil {
+		if *g.Players[*move.PlayerID-1].Score != 0 {
+			g.Players[*move.PlayerID-1].Score = ptr.Int64(*g.Players[*move.PlayerID-1].Score - 1)
+		}
 		return errors.New("Invalid set")
 	}
 
