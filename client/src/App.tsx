@@ -28,7 +28,7 @@ export default function App(): React.ReactElement {
   }
 
   const handleMove = (cards: Card[]): void => {
-    const move: Move = { cards, player_id: 1 }
+    const move: Move = { cards }
     ws.send(JSON.stringify({
       type: 'move',
       payload: move,

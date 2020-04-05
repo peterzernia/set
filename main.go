@@ -67,21 +67,23 @@ func main() {
 				context.handleJoin(message, conn)
 				res, _ = json.Marshal(context.Game)
 			case "move":
-				context.handleMove(message)
+				context.handleMove(message, conn)
 				res, _ = json.Marshal(context.Game)
 			default:
 				res = []byte("Unrecognized message type" + message.Type)
 				log.Println("Unrecognized message type" + message.Type)
 			}
 
-			// send to every client that is currently connected
+			// Send to every client that is currently connected
 			for client := range clients {
 				err := client.WriteMessage(websocket.TextMessage, res)
 				if err != nil {
+					// Remove connection
 					log.Printf("Websocket error: %s", err)
 					client.Close()
 					delete(clients, client)
 
+					// Remove player
 					var index int
 					for i, v := range context.Game.Players {
 						if v.Conn == conn {
@@ -119,12 +121,12 @@ func (c *Context) handleJoin(message message.Message, conn *websocket.Conn) *int
 	return player.ID
 }
 
-func (c *Context) handleMove(message message.Message) error {
+func (c *Context) handleMove(message message.Message, conn *websocket.Conn) error {
 	move := game.Move{}
 	j, _ := json.Marshal(message.Payload)
 	json.Unmarshal(j, &move)
 
-	err := c.Game.Play(&move)
+	err := c.Game.Play(&move, conn)
 	if err != nil {
 		fmt.Println(err.Error())
 		return err

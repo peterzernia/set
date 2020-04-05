@@ -19,5 +19,4 @@ type Data = {
 
 type Move = {
   cards: Card[];
-  player_id: number;
 }

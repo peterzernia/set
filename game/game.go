@@ -3,6 +3,7 @@ package game
 import (
 	"errors"
 
+	"github.com/gorilla/websocket"
 	"github.com/peterzernia/set/deck"
 	"github.com/peterzernia/set/ptr"
 )
@@ -36,12 +37,10 @@ func (g *Game) Deal() {
 }
 
 // Play plays a play
-func (g *Game) Play(move *Move) error {
+func (g *Game) Play(move *Move, conn *websocket.Conn) error {
 	valid, err := g.Deck.CheckSet(move.Cards)
 	if !valid || err != nil {
-		if *g.Players[*move.PlayerID-1].Score != 0 {
-			g.Players[*move.PlayerID-1].Score = ptr.Int64(*g.Players[*move.PlayerID-1].Score - 1)
-		}
+		g.UpdateScore(conn, -1)
 		return errors.New("Invalid set")
 	}
 
@@ -70,24 +69,9 @@ func (g *Game) Play(move *Move) error {
 	}
 
 	// Give the player a point
-	g.Players[*move.PlayerID-1].Score = ptr.Int64(*g.Players[*move.PlayerID-1].Score + 1)
+	g.UpdateScore(conn, 1)
 
 	return nil
-}
-
-// Refresh deals out cards into the places
-// the last set was
-func (g *Game) Refresh() {
-	// TODO only refresh when there are fewer than 12 cards in play
-	for i, row := range g.InPlay {
-		for j, card := range row {
-			if card.Color == nil {
-				g.InPlay[i][j] = g.Deck.Cards[0]
-				g.Deck.Cards = g.Deck.Cards[1:]
-			}
-		}
-	}
-	return
 }
 
 // AddCards adds another 3 cards onto the game board
@@ -98,4 +82,21 @@ func (g *Game) AddCards() {
 		g.InPlay[i] = append(g.InPlay[i], g.Deck.Cards[0])
 		g.Deck.Cards = g.Deck.Cards[1:]
 	}
+}
+
+// UpdateScore updates a players score. The player is found by their websocket
+// connection
+func (g *Game) UpdateScore(conn *websocket.Conn, value int64) {
+	var index int
+	for i, player := range g.Players {
+		if player.Conn == conn {
+			index = i
+		}
+	}
+
+	if *g.Players[index].Score == 0 && value < 0 {
+		return
+	}
+
+	g.Players[index].Score = ptr.Int64(*g.Players[index].Score + value)
 }
