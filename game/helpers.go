@@ -8,7 +8,7 @@ import (
 func findIndex(cardss [][]deck.Card, card deck.Card) []int {
 	for i, cards := range cardss {
 		for j, v := range cards {
-			if *v.Color == *card.Color &&
+			if v.Color != nil && *v.Color == *card.Color &&
 				*v.Shape == *card.Shape &&
 				*v.Number == *card.Number &&
 				*v.Shading == *card.Shading {

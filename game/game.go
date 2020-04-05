@@ -61,8 +61,8 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) error {
 	// Replace the found set with new cards
 	for _, v := range indices {
 		if len(g.Deck.Cards) > 0 {
-			g.Deck.Cards = g.Deck.Cards[1:]
 			g.InPlay[v[0]][v[1]] = g.Deck.Cards[0]
+			g.Deck.Cards = g.Deck.Cards[1:]
 		} else {
 			g.InPlay[v[0]][v[1]] = deck.Card{}
 		}
