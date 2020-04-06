@@ -36,7 +36,7 @@ func New() *Deck {
 		}
 	}
 
-	deck.Cards = cards
+	deck.Cards = cards[0:12]
 	// deck.Shuffle()
 	return &deck
 }

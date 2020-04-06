@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Data, Move, Player } from 'types'
 import Board from 'components/Board'
 import Join from 'components/Join'
+import GameOver from 'assets/game_over.gif'
 import './App.css'
 
 const ws = new WebSocket('ws://localhost:8002/ws')
@@ -56,7 +57,7 @@ export default function App(): React.ReactElement {
     return (
       <div className="app">
         <div className="game-over">
-          <div>Game Over</div>
+          <img src={GameOver} alt="game-over" />
           <div>{`Winner: ${winners.join('& ')}`}</div>
           <button type="button" onClick={(): void => handleNew()}>Play again?</button>
         </div>
