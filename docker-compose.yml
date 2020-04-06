@@ -1,0 +1,23 @@
+version: "3.3"
+
+services:
+  set:
+    build: .
+    command: gaper --ignore ./client
+    env_file: .env
+    environment:
+      CGO_ENABLED: 0
+    volumes:
+      - .:/go/src/github.com/peterzernia/set
+    ports:
+      - "8002:8002"
+  client:
+    build: ./client
+    command: yarn start
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/usr/src/app
+      - node_modules:/usr/src/app/node_modules
+volumes:
+  node_modules:
