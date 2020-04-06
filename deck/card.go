@@ -44,3 +44,13 @@ type Card struct {
 	Number  *int64 `json:"number"`
 	Shading *int64 `json:"shading"`
 }
+
+// Copy copies a card
+func (c *Card) Copy() *Card {
+	return &Card{
+		Color:   c.Color,
+		Shape:   c.Shape,
+		Number:  c.Number,
+		Shading: c.Shading,
+	}
+}

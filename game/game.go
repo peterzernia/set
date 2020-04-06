@@ -24,15 +24,18 @@ func New() *Game {
 	return &game
 }
 
-// Deal deals the initial 9 cards
+// Deal deals the initial 12 cards
 func (g *Game) Deal() {
 	inPlay := [][]deck.Card{[]deck.Card{}, []deck.Card{}, []deck.Card{}}
-	inPlay[0] = g.Deck.Cards[0:4]
-	inPlay[1] = g.Deck.Cards[4:8]
-	inPlay[2] = g.Deck.Cards[8:12]
+
+	for i := 0; i < 4; i++ {
+		for j := 0; j < 3; j++ {
+			inPlay[j] = append(inPlay[j], *g.Deck.Cards[j].Copy())
+		}
+		g.Deck.Cards = g.Deck.Cards[3:]
+	}
 
 	g.InPlay = inPlay
-	g.Deck.Cards = g.Deck.Cards[12:]
 	return
 }
 
@@ -71,7 +74,7 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) (bool, error) {
 	// 12 (+3 about to be removed) cards already in play
 	for _, v := range indices {
 		if len(g.Deck.Cards) > 0 && inPlay < 15 {
-			g.InPlay[v[0]][v[1]] = g.Deck.Cards[0]
+			g.InPlay[v[0]][v[1]] = *g.Deck.Cards[0].Copy()
 			g.Deck.Cards = g.Deck.Cards[1:]
 		} else {
 			g.InPlay[v[0]][v[1]] = deck.Card{}
@@ -132,9 +135,9 @@ func (g *Game) AddCards() {
 
 	// Start a new column if there are no more spaces
 	if len(cards) > 0 {
-		g.InPlay[0] = append(g.InPlay[0], cards[0])
-		g.InPlay[1] = append(g.InPlay[1], cards[1])
-		g.InPlay[2] = append(g.InPlay[2], cards[2])
+		g.InPlay[0] = append(g.InPlay[0], *cards[0].Copy())
+		g.InPlay[1] = append(g.InPlay[1], *cards[1].Copy())
+		g.InPlay[2] = append(g.InPlay[2], *cards[2].Copy())
 	}
 }
 
