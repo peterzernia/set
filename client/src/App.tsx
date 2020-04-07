@@ -23,6 +23,8 @@ export default function App(): React.ReactElement {
       console.log(JSON.parse(msg.data)) // eslint-disable-line
       setData(JSON.parse(msg.data))
     }
+
+    ws.onclose = (): void => alert('Disconnected from server') // eslint-disable-line
   }, [])
 
   const handleJoin = (name: string): void => {
