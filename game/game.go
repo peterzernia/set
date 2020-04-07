@@ -43,7 +43,7 @@ func (g *Game) Deal() {
 
 // Play plays a play
 func (g *Game) Play(move *Move, conn *websocket.Conn) (bool, error) {
-	valid, err := g.Deck.CheckSet(move.Cards)
+	valid, err := g.CheckSet(move.Cards)
 	if !valid || err != nil {
 		g.UpdateScore(conn, -1)
 		return false, errors.New("Invalid set")
@@ -99,6 +99,54 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) (bool, error) {
 	return false, nil
 }
 
+// CheckSet checks if 3 cards are a valid set. For each attribute,
+// there are 3 options. If one of the attribute's options has a count of
+// 2 that means the 3 cards are not a set, e.g. if there are two red cards
+// the 3 cards are not a set.
+func (g *Game) CheckSet(cards []deck.Card) (bool, error) {
+	if len(cards) != 3 {
+		return false, errors.New("Sets must contain 3 cards")
+	}
+
+	colors := make(map[int64]int64)
+	shapes := make(map[int64]int64)
+	numbers := make(map[int64]int64)
+	shadings := make(map[int64]int64)
+
+	for _, card := range cards {
+		colors[*card.Color]++
+		shapes[*card.Shape]++
+		numbers[*card.Number]++
+		shadings[*card.Shading]++
+	}
+
+	for _, v := range colors {
+		if v == 2 {
+			return false, nil
+		}
+	}
+
+	for _, v := range shapes {
+		if v == 2 {
+			return false, nil
+		}
+	}
+
+	for _, v := range numbers {
+		if v == 2 {
+			return false, nil
+		}
+	}
+
+	for _, v := range shadings {
+		if v == 2 {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
 // CheckRemainingSets checks if there is still
 // at least on set in the InPlay cards
 func (g *Game) CheckRemainingSets() bool {
@@ -116,7 +164,7 @@ func (g *Game) CheckRemainingSets() bool {
 		for j, y := range cards {
 			for k, z := range cards {
 				if i != j && i != k && j != k {
-					valid, _ := g.Deck.CheckSet([]deck.Card{x, y, z})
+					valid, _ := g.CheckSet([]deck.Card{x, y, z})
 					if valid {
 						end = false
 					}

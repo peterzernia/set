@@ -1,7 +1,6 @@
 package deck
 
 import (
-	"errors"
 	"math/rand"
 	"time"
 
@@ -49,52 +48,4 @@ func (d *Deck) Shuffle() {
 		r := i + rand.Intn(N-i)
 		d.Cards[r], d.Cards[i] = d.Cards[i], d.Cards[r]
 	}
-}
-
-// CheckSet checks if 3 cards are a valid set. For each attribute,
-// there are 3 options. If one of the attribute's options has a count of
-// 2 that means the 3 cards are not a set, e.g. if there are two red cards
-// the 3 cards are not a set.
-func (d *Deck) CheckSet(cards []Card) (bool, error) {
-	if len(cards) != 3 {
-		return false, errors.New("Sets must contain 3 cards")
-	}
-
-	colors := make(map[int64]int64)
-	shapes := make(map[int64]int64)
-	numbers := make(map[int64]int64)
-	shadings := make(map[int64]int64)
-
-	for _, card := range cards {
-		colors[*card.Color]++
-		shapes[*card.Shape]++
-		numbers[*card.Number]++
-		shadings[*card.Shading]++
-	}
-
-	for _, v := range colors {
-		if v == 2 {
-			return false, nil
-		}
-	}
-
-	for _, v := range shapes {
-		if v == 2 {
-			return false, nil
-		}
-	}
-
-	for _, v := range numbers {
-		if v == 2 {
-			return false, nil
-		}
-	}
-
-	for _, v := range shadings {
-		if v == 2 {
-			return false, nil
-		}
-	}
-
-	return true, nil
 }
