@@ -102,27 +102,30 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) (bool, error) {
 // CheckRemainingSets checks if there is still
 // at least on set in the InPlay cards
 func (g *Game) CheckRemainingSets() bool {
-	cards := g.InPlay[0]
-	cards = append(cards, g.InPlay[1]...)
-	cards = append(cards, g.InPlay[2]...)
+	cards := []deck.Card{}
+	for _, row := range g.InPlay {
+		for _, card := range row {
+			if card.Color != nil {
+				cards = append(cards, *card.Copy())
+			}
+		}
+	}
 
-	notEnd := false
+	end := true
 	for i, x := range cards {
 		for j, y := range cards {
 			for k, z := range cards {
-				if i != j && i != k && j == k &&
-					x.Color != nil &&
-					y.Color != nil &&
-					z.Color != nil {
+				if i != j && i != k && j != k {
 					valid, _ := g.Deck.CheckSet([]deck.Card{x, y, z})
-					if !valid {
-						notEnd = true
+					if valid {
+						end = false
 					}
 				}
 			}
 		}
 	}
-	return !notEnd
+
+	return end
 }
 
 // AddCards adds another 3 cards onto the game board
