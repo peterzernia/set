@@ -5,3 +5,5 @@ set
 /client/build
 /client/coverage
 .DS_Store
+.vscode
+
