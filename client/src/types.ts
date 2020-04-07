@@ -16,6 +16,7 @@ type Data = {
   game_over?: boolean;
   in_play: Card[][];
   players: Player[];
+  remaining: number;
 }
 
 type Move = {

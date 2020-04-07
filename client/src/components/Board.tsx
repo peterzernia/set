@@ -12,7 +12,7 @@ type Props = {
 export default function Board(props: Props): React.ReactElement {
   const [selected, setSelected] = React.useState<Card[]>([])
   const { data, handleMove, handleRequest } = props
-  const { in_play, players } = data
+  const { in_play, players, remaining } = data
 
   const handleClick = (card: Card): void => {
     const i = selected.indexOf(card)
@@ -56,6 +56,7 @@ export default function Board(props: Props): React.ReactElement {
       >
         Request more cards
       </button>
+      <div>{`Remaining cards: ${remaining}`}</div>
       {players.map((player: Player) => (
         <div key={player.id}>
           {`${player.name}: ${player.score} ${player.request ? 'Requested more cards' : ''}`}

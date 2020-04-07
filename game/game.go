@@ -10,10 +10,11 @@ import (
 
 // Game represents a Set game
 type Game struct {
-	Deck     *deck.Deck    `json:"-"`
-	GameOver *bool         `json:"game_over,omitempty"`
-	InPlay   [][]deck.Card `json:"in_play,omitempty"`
-	Players  []Player      `json:"players,omitempty"`
+	Deck      *deck.Deck    `json:"-"`
+	GameOver  *bool         `json:"game_over,omitempty"`
+	InPlay    [][]deck.Card `json:"in_play,omitempty"`
+	Players   []Player      `json:"players,omitempty"`
+	Remaining *int64        `json:"remaining,omitempty"`
 }
 
 // New initializes a game
@@ -36,6 +37,7 @@ func (g *Game) Deal() {
 	}
 
 	g.InPlay = inPlay
+	g.Remaining = ptr.Int64(int64(len(g.Deck.Cards)))
 	return
 }
 
@@ -84,6 +86,7 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) (bool, error) {
 
 	// Give the player a point
 	g.UpdateScore(conn, 1)
+	g.Remaining = ptr.Int64(int64(len(g.Deck.Cards)))
 
 	// If there are no cards left, check if there are any
 	// remaining sets on the board, if not the game is over
@@ -145,6 +148,8 @@ func (g *Game) AddCards() {
 		g.InPlay[1] = append(g.InPlay[1], *cards[1].Copy())
 		g.InPlay[2] = append(g.InPlay[2], *cards[2].Copy())
 	}
+
+	g.Remaining = ptr.Int64(int64(len(g.Deck.Cards)))
 }
 
 // UpdateScore updates a players score. The player is found by their websocket
