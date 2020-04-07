@@ -1,6 +1,14 @@
-.app {
+body {
     width: 100%;
+    max-width: 100% !important;
+    margin: 0px !important;
+}
+
+.app {
+    width: 95%;
     display: flex;
+    justify-content: center;
+    margin: auto;
 }
 
 .join {
@@ -23,8 +31,10 @@
 
 .card {
     box-sizing: border-box;
-    width: 100px;
-    height: 150px;
+    max-width: 100px;
+    width: 22vw;
+    height: calc(22vw * 1.5);
+    max-height: 150px;
     border: 1px solid black;
     box-shadow: 3px 3px 3px lightgray;
     cursor: pointer;
@@ -54,8 +64,9 @@
 svg {
     z-index: -1000;
     stroke-width: 4;
-    width: 300px;
-    height: 100px;
+    width: 75%;
+    max-width: 300px;
+    max-height: 100px;
     margin: -30px;
 }
 
