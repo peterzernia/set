@@ -43,9 +43,9 @@ func New() *Deck {
 // Shuffle uses Knuth shuffle algo to randomize the deck in O(n) time
 // sourced from https://gist.github.com/quux00/8258425
 func (d *Deck) Shuffle() {
-	N := len(d.Cards)
-	for i := 0; i < N; i++ {
-		r := i + rand.Intn(N-i)
+	n := len(d.Cards)
+	for i := 0; i < n; i++ {
+		r := i + rand.Intn(n-i)
 		d.Cards[r], d.Cards[i] = d.Cards[i], d.Cards[r]
 	}
 }

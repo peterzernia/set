@@ -50,6 +50,8 @@ func main() {
 		// Register client
 		clients[conn] = true
 
+		fmt.Println(clients)
+
 		for {
 			message := message.Message{}
 			_, msg, err := conn.ReadMessage()
@@ -87,22 +89,19 @@ func main() {
 			for client := range clients {
 				err := client.WriteMessage(websocket.TextMessage, res)
 				if err != nil {
+					// Remove player
+					for i, v := range context.Game.Players {
+						if v.Conn == client {
+							fmt.Println(clients)
+							fmt.Println(*v.Name)
+							context.Game.Players = append(context.Game.Players[:i], context.Game.Players[i+1:]...)
+						}
+					}
+
 					// Remove connection
 					log.Printf("Websocket error: %s", err)
 					client.Close()
 					delete(clients, client)
-
-					// Remove player
-					var index int
-					for i, v := range context.Game.Players {
-						if v.Conn == conn {
-							index = i
-						}
-					}
-
-					if context.Game.Players != nil && len(context.Game.Players) > 0 {
-						context.Game.Players = append(context.Game.Players[:index], context.Game.Players[index+1:]...)
-					}
 				}
 			}
 		}
