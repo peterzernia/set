@@ -1,5 +1,10 @@
 import * as React from 'react'
-import { Data, Move, Player } from 'types'
+import {
+  Card,
+  Data,
+  Move,
+  Player,
+} from 'types'
 import Board from 'components/Board'
 import Join from 'components/Join'
 import GameOver from 'assets/game_over.gif'
@@ -9,7 +14,7 @@ import './App.css'
 const ws = new WebSocket(`${process.env.REACT_APP_API_URL}/ws`)
 
 export default function App(): React.ReactElement {
-  const [data, setData] = React.useState<Data>(undefined)
+  const [data, setData] = React.useState<Data | undefined>()
 
   React.useEffect(() => {
     ws.onopen = (): void => {}

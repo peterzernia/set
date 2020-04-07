@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Data, Card as CardType } from 'types'
+import { Data, Card as CardType, Player } from 'types'
 import Card from './Card'
 import Empty from './Empty'
 
@@ -10,11 +10,11 @@ type Props = {
 }
 
 export default function Board(props: Props): React.ReactElement {
-  const [selected, setSelected] = React.useState<Card[]>([])
+  const [selected, setSelected] = React.useState<CardType[]>([])
   const { data, handleMove, handleRequest } = props
   const { in_play, players, remaining } = data
 
-  const handleClick = (card: Card): void => {
+  const handleClick = (card: CardType): void => {
     const i = selected.indexOf(card)
     if (i === -1) {
       const slctd = [...selected, card]
@@ -34,7 +34,7 @@ export default function Board(props: Props): React.ReactElement {
       {in_play.map((cards: CardType[], i: number) => (
         <div className="row" key={i} /* eslint-disable-line */>
           {
-            cards.map((card: Card) => {
+            cards.map((card: CardType) => {
               if (card.color === null) {
                 return <Empty />
               }

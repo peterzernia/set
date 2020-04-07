@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Card as CardType } from 'types'
-import { COLORS, SHAPES, SHADINGS } from 'constants'
+import { COLORS, SHAPES, SHADINGS } from '../constants'
 import Diamond from './Diamond'
 import Oval from './Oval'
 import Squiggle from './Squiggle'
