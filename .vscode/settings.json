@@ -1,5 +1,0 @@
-{
-  "eslint.workingDirectories": ["./client"],
-  "css.validate": true,
-  "liveServer.settings.port": 5501
-}
