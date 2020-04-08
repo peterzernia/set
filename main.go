@@ -50,8 +50,6 @@ func main() {
 		// Register client
 		clients[conn] = true
 
-		fmt.Println(clients)
-
 		for {
 			message := message.Message{}
 			_, msg, err := conn.ReadMessage()
@@ -92,8 +90,6 @@ func main() {
 					// Remove player
 					for i, v := range context.Game.Players {
 						if v.Conn == client {
-							fmt.Println(clients)
-							fmt.Println(*v.Name)
 							context.Game.Players = append(context.Game.Players[:i], context.Game.Players[i+1:]...)
 						}
 					}
