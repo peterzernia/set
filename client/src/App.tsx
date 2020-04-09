@@ -23,7 +23,7 @@ export default function App(): React.ReactElement {
       setData(JSON.parse(msg.data))
     }
 
-    ws.onclose = (): void => {
+    ws.onclose = (msg): void => {
       alert('Disconnected from server') // eslint-disable-line
       window.location.reload()
     }

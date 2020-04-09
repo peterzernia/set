@@ -42,6 +42,8 @@ func main() {
 			return
 		}
 
+		defer conn.Close()
+
 		// Reset game when there are no connections
 		if len(clients) == 0 {
 			context.Game = nil
