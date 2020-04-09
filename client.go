@@ -36,7 +36,7 @@ var upgrader = websocket.Upgrader{
 
 // Client is a middleman between the websocket connection and the hub.
 type Client struct {
-	hub *Hub
+	context *Context
 
 	// The websocket connection.
 	conn *websocket.Conn
@@ -45,9 +45,9 @@ type Client struct {
 	send chan []byte
 }
 
-func (c *Client) read(context *Context) {
+func (c *Client) read() {
 	defer func() {
-		c.hub.unregister <- c
+		c.context.unregister <- c
 		c.conn.Close()
 	}()
 
@@ -74,23 +74,23 @@ func (c *Client) read(context *Context) {
 		var res []byte
 		switch message.Type {
 		case "join":
-			context.handleJoin(message, c.conn)
-			res, _ = json.Marshal(context.Game)
+			c.context.handleJoin(message, c.conn)
+			res, _ = json.Marshal(c.context.Game)
 		case "move":
-			context.handleMove(message, c.conn)
-			res, _ = json.Marshal(context.Game)
+			c.context.handleMove(message, c.conn)
+			res, _ = json.Marshal(c.context.Game)
 		case "request":
-			context.handleRequest(c.conn)
-			res, _ = json.Marshal(context.Game)
+			c.context.handleRequest(c.conn)
+			res, _ = json.Marshal(c.context.Game)
 		case "new":
-			context.handleNew()
-			res, _ = json.Marshal(context.Game)
+			c.context.handleNew()
+			res, _ = json.Marshal(c.context.Game)
 		default:
 			res = []byte("Unrecognized message type" + message.Type)
 			log.Println("Unrecognized message type" + message.Type)
 		}
 
-		c.hub.broadcast <- res
+		c.context.broadcast <- res
 	}
 }
 
@@ -136,18 +136,18 @@ func (c *Client) write() {
 }
 
 // serveWs handles websocket requests from the peer.
-func serveWs(context *Context, hub *Hub, w http.ResponseWriter, r *http.Request) {
+func serveWs(context *Context, w http.ResponseWriter, r *http.Request) {
 	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
-	client.hub.register <- client
+	client := &Client{context: context, conn: conn, send: make(chan []byte, 256)}
+	client.context.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
 	go client.write()
-	go client.read(context)
+	go client.read()
 }
