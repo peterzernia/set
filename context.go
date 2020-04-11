@@ -38,6 +38,13 @@ func (c *Context) run() {
 			if _, ok := c.clients[client]; ok {
 				delete(c.clients, client)
 				close(client.send)
+
+				// remove player from game
+				for i, v := range c.Game.Players {
+					if v.Conn == client.conn {
+						c.Game.Players = append(c.Game.Players[:i], c.Game.Players[i+1:]...)
+					}
+				}
 			}
 		case message := <-c.broadcast:
 			for client := range c.clients {
@@ -46,6 +53,8 @@ func (c *Context) run() {
 				default:
 					close(client.send)
 					delete(c.clients, client)
+
+					// remove player from game
 					for i, v := range c.Game.Players {
 						if v.Conn == client.conn {
 							c.Game.Players = append(c.Game.Players[:i], c.Game.Players[i+1:]...)
