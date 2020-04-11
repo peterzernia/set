@@ -45,6 +45,10 @@ func (c *Context) run() {
 						c.Game.Players = append(c.Game.Players[:i], c.Game.Players[i+1:]...)
 					}
 				}
+
+				if len(c.Game.Players) == 0 {
+					c.Game = nil
+				}
 			}
 		case message := <-c.broadcast:
 			for client := range c.clients {
@@ -59,6 +63,10 @@ func (c *Context) run() {
 						if v.Conn == client.conn {
 							c.Game.Players = append(c.Game.Players[:i], c.Game.Players[i+1:]...)
 						}
+					}
+
+					if len(c.Game.Players) == 0 {
+						c.Game = nil
 					}
 				}
 			}
