@@ -30,6 +30,11 @@ func newContext() *Context {
 }
 
 func (c *Context) run() {
+	// Initialize game
+	if c.Game == nil {
+		c.Game = game.New()
+	}
+
 	for {
 		select {
 		case client := <-c.register:

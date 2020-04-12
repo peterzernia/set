@@ -22,6 +22,7 @@ type Game struct {
 // New initializes a game
 func New() *Game {
 	game := Game{}
+	game.Players = []Player{}
 	game.Deck = deck.New()
 	game.Deal()
 	return &game
