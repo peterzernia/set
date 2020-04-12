@@ -52,21 +52,33 @@ func (c *Context) run() {
 			}
 		case message := <-c.broadcast:
 			for client := range c.clients {
-				select {
-				case client.send <- message:
-				default:
-					close(client.send)
-					delete(c.clients, client)
 
-					// remove player from game
-					for i, v := range c.Game.Players {
-						if v.Conn == client.conn {
-							c.Game.Players = append(c.Game.Players[:i], c.Game.Players[i+1:]...)
-						}
+				// only send mesages to clients that have
+				// joined the game with a username
+				isPlaying := false
+				for _, player := range c.Game.Players {
+					if client.conn == player.Conn {
+						isPlaying = true
 					}
+				}
 
-					if len(c.Game.Players) == 0 {
-						c.Game = nil
+				if isPlaying {
+					select {
+					case client.send <- message:
+					default:
+						close(client.send)
+						delete(c.clients, client)
+
+						// remove player from game
+						for i, v := range c.Game.Players {
+							if v.Conn == client.conn {
+								c.Game.Players = append(c.Game.Players[:i], c.Game.Players[i+1:]...)
+							}
+						}
+
+						if len(c.Game.Players) == 0 {
+							c.Game = nil
+						}
 					}
 				}
 			}
