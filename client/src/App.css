@@ -30,6 +30,7 @@ input:focus {
 
 .last-set {
     display: flex;
+    line-height: 53px;
 }
 
 .row {

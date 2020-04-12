@@ -15,6 +15,7 @@ export type Card = {
 export type Data = {
   game_over?: boolean;
   in_play: Card[][];
+  last_player: string;
   last_set?: Card[];
   players: Player[];
   remaining: number;

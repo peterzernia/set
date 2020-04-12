@@ -14,6 +14,7 @@ export default function Board(props: Props): React.ReactElement {
   const { data, handleMove, handleRequest } = props
   const {
     in_play,
+    last_player,
     last_set,
     players,
     remaining,
@@ -56,6 +57,7 @@ export default function Board(props: Props): React.ReactElement {
         </div>
       ))}
       <div className="last-set">
+        { last_player && `${last_player} found a set: `}
         {last_set && last_set.map((card: CardType) => (
           <Card
             selected={false}
