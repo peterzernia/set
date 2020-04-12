@@ -1,4 +1,4 @@
-package deck
+package game
 
 // Constants for colors
 const (

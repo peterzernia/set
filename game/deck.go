@@ -1,4 +1,4 @@
-package deck
+package game
 
 import (
 	"math/rand"
@@ -12,8 +12,8 @@ type Deck struct {
 	Cards []Card `json:"cards"`
 }
 
-// New creates a new deck
-func New() *Deck {
+// newDeck creates a new deck
+func newDeck() *Deck {
 	rand.Seed(time.Now().UnixNano())
 
 	deck := Deck{}

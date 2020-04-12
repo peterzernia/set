@@ -4,33 +4,32 @@ import (
 	"errors"
 
 	"github.com/gorilla/websocket"
-	"github.com/peterzernia/set/deck"
 	"github.com/peterzernia/set/ptr"
 )
 
 // Game represents a Set game
 type Game struct {
-	Deck       *deck.Deck    `json:"-"`
-	GameOver   *bool         `json:"game_over,omitempty"`
-	InPlay     [][]deck.Card `json:"in_play,omitempty"`
-	LastPlayer *string       `json:"last_player,omitempty"`
-	LastSet    []deck.Card   `json:"last_set,omitempty"`
-	Players    []Player      `json:"players,omitempty"`
-	Remaining  *int64        `json:"remaining,omitempty"`
+	Deck       *Deck    `json:"-"`
+	GameOver   *bool    `json:"game_over,omitempty"`
+	InPlay     [][]Card `json:"in_play,omitempty"`
+	LastPlayer *string  `json:"last_player,omitempty"`
+	LastSet    []Card   `json:"last_set,omitempty"`
+	Players    []Player `json:"players,omitempty"`
+	Remaining  *int64   `json:"remaining,omitempty"`
 }
 
 // New initializes a game
 func New() *Game {
 	game := Game{}
 	game.Players = []Player{}
-	game.Deck = deck.New()
+	game.Deck = newDeck()
 	game.Deal()
 	return &game
 }
 
 // Deal deals the initial 12 cards
 func (g *Game) Deal() {
-	inPlay := [][]deck.Card{[]deck.Card{}, []deck.Card{}, []deck.Card{}}
+	inPlay := [][]Card{[]Card{}, []Card{}, []Card{}}
 
 	for i := 0; i < 4; i++ {
 		for j := 0; j < 3; j++ {
@@ -83,7 +82,7 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) (bool, error) {
 			g.InPlay[v[0]][v[1]] = *g.Deck.Cards[0].Copy()
 			g.Deck.Cards = g.Deck.Cards[1:]
 		} else {
-			g.InPlay[v[0]][v[1]] = deck.Card{} // Placeholder card
+			g.InPlay[v[0]][v[1]] = Card{} // Placeholder card
 		}
 	}
 
@@ -115,7 +114,7 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) (bool, error) {
 // there are 3 options. If one of the attribute's options has a count of
 // 2 that means the 3 cards are not a set, e.g. if there are two red cards
 // the 3 cards are not a set.
-func (g *Game) CheckSet(cards []deck.Card) (bool, error) {
+func (g *Game) CheckSet(cards []Card) (bool, error) {
 	if len(cards) != 3 {
 		return false, errors.New("Sets must contain 3 cards")
 	}
@@ -162,7 +161,7 @@ func (g *Game) CheckSet(cards []deck.Card) (bool, error) {
 // CheckRemainingSets checks if there is still
 // at least on set in the InPlay cards
 func (g *Game) CheckRemainingSets() bool {
-	cards := []deck.Card{}
+	cards := []Card{}
 	for _, row := range g.InPlay {
 		for _, card := range row {
 			if card.Color != nil {
@@ -176,7 +175,7 @@ func (g *Game) CheckRemainingSets() bool {
 		for j, y := range cards {
 			for k, z := range cards {
 				if i != j && i != k && j != k {
-					valid, _ := g.CheckSet([]deck.Card{x, y, z})
+					valid, _ := g.CheckSet([]Card{x, y, z})
 					if valid {
 						end = false
 					}
