@@ -7,7 +7,7 @@ import Squiggle from './Squiggle'
 
 type Props = {
   card: CardType;
-  onClick: () => void;
+  onClick?: () => void;
   selected: boolean;
 }
 
@@ -38,7 +38,7 @@ export default function Card(props: Props): React.ReactElement {
 
   return (
     <div
-      className={`card ${selected ? 'selected' : ''}`}
+      className={`card ${selected ? 'selected' : ''} ${onClick ? '' : 'thumbnail'}`}
       onClick={onClick}
       onKeyDown={onClick}
       role="button"

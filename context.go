@@ -47,7 +47,7 @@ func (c *Context) run() {
 				}
 
 				if len(c.Game.Players) == 0 {
-					c.Game = nil
+					c.Game = game.New()
 				}
 			}
 		case message := <-c.broadcast:
@@ -77,7 +77,7 @@ func (c *Context) run() {
 						}
 
 						if len(c.Game.Players) == 0 {
-							c.Game = nil
+							c.Game = game.New()
 						}
 					}
 				}

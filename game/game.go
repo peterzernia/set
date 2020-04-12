@@ -13,6 +13,7 @@ type Game struct {
 	Deck      *deck.Deck    `json:"-"`
 	GameOver  *bool         `json:"game_over,omitempty"`
 	InPlay    [][]deck.Card `json:"in_play,omitempty"`
+	LastSet   []deck.Card   `json:"last_set,omitempty"`
 	Players   []Player      `json:"players,omitempty"`
 	Remaining *int64        `json:"remaining,omitempty"`
 }
@@ -87,6 +88,8 @@ func (g *Game) Play(move *Move, conn *websocket.Conn) (bool, error) {
 	// Give the player a point
 	g.UpdateScore(conn, 1)
 	g.Remaining = ptr.Int64(int64(len(g.Deck.Cards)))
+
+	g.LastSet = move.Cards
 
 	// If there are no cards left, check if there are any
 	// remaining sets on the board, if not the game is over

@@ -7,10 +7,15 @@ body {
 .app {
     display: flex;
     margin: auto;
+    margin: 16px 0px;
 }
 
 .join {
     margin: auto;
+}
+
+input:focus {
+    outline: none;
 }
 
 .game-over {
@@ -23,8 +28,20 @@ body {
     margin: auto;
 }
 
+.last-set {
+    display: flex;
+}
+
 .row {
     display: flex;
+}
+
+.thumbnail {
+    max-width: 30px !important;
+    max-height: 45px !important;
+    cursor: default !important;
+    padding: 6px 0px !important;
+    border-radius: 4px !important;
 }
 
 .card {

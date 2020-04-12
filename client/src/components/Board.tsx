@@ -12,7 +12,12 @@ type Props = {
 export default function Board(props: Props): React.ReactElement {
   const [selected, setSelected] = React.useState<CardType[]>([])
   const { data, handleMove, handleRequest } = props
-  const { in_play, players, remaining } = data
+  const {
+    in_play,
+    last_set,
+    players,
+    remaining,
+  } = data
 
   const handleClick = (card: CardType): void => {
     const i = selected.indexOf(card)
@@ -50,6 +55,15 @@ export default function Board(props: Props): React.ReactElement {
           }
         </div>
       ))}
+      <div className="last-set">
+        {last_set && last_set.map((card: CardType) => (
+          <Card
+            selected={false}
+            key={`${card.color}${card.shape}${card.number}${card.shading}`}
+            card={card}
+          />
+        ))}
+      </div>
       <button
         type="button"
         onClick={(): void => handleRequest()}
