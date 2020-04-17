@@ -14,20 +14,38 @@ import './App.css'
 const ws = new WebSocket(`${process.env.REACT_APP_API_URL}/ws`)
 
 export default function App(): React.ReactElement {
-  const [data, setData] = React.useState<Data | undefined>()
+  const [selected, setSelected] = React.useState<Card[]>([])
+  const [data, setData] = React.useState<Data>({} as Data)
+
+  // Custom hook to keep track of the previous state of Data
+  const usePrevious = (value: Data): React.MutableRefObject<Data>['current'] => {
+    const ref = React.useRef({} as Data)
+    React.useEffect(() => {
+      ref.current = value
+    })
+    return ref.current
+  }
+
+  const prevState = usePrevious(data) // prevState of Data
 
   React.useEffect(() => {
     ws.onopen = (): void => {}
 
     ws.onmessage = (msg): void => {
-      setData(JSON.parse(msg.data))
+      const currentState = JSON.parse(msg.data)
+      setData(currentState)
+
+      // If the in_play cards have changed, deselect any cards for the client
+      if (JSON.stringify(prevState.in_play) !== JSON.stringify(currentState.in_play)) {
+        setSelected([])
+      }
     }
 
     ws.onclose = (): void => {
       alert('Disconnected from server') // eslint-disable-line
       window.location.reload()
     }
-  }, [])
+  }, [data, prevState.in_play])
 
   const handleJoin = (name: string): void => {
     ws.send(JSON.stringify({
@@ -77,9 +95,16 @@ export default function App(): React.ReactElement {
 
   return (
     <div className="app">
-      { data
-        ? <Board data={data} handleMove={handleMove} handleRequest={handleRequest} />
-        : <Join handleJoin={handleJoin} /> }
+      { data.in_play
+        ? (
+          <Board
+            data={data}
+            handleMove={handleMove}
+            handleRequest={handleRequest}
+            selected={selected}
+            setSelected={setSelected}
+          />
+        ) : <Join handleJoin={handleJoin} /> }
     </div>
   )
 }

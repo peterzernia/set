@@ -7,11 +7,19 @@ type Props = {
   data: Data;
   handleMove: (cards: CardType[]) => void;
   handleRequest: () => void;
+  selected: CardType[];
+  setSelected: React.Dispatch<React.SetStateAction<CardType[]>>;
 }
 
 export default function Board(props: Props): React.ReactElement {
-  const [selected, setSelected] = React.useState<CardType[]>([])
-  const { data, handleMove, handleRequest } = props
+  const {
+    data,
+    handleMove,
+    handleRequest,
+    selected,
+    setSelected,
+  } = props
+
   const {
     in_play,
     last_player,
