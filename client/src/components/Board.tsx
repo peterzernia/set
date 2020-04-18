@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Data, Card as CardType, Player } from 'types'
 import Card from './Card'
-import Empty from './Empty'
 
 type Props = {
   data: Data;
@@ -11,6 +10,7 @@ type Props = {
   setSelected: React.Dispatch<React.SetStateAction<CardType[]>>;
 }
 
+/* eslint react/no-array-index-key:0 */
 export default function Board(props: Props): React.ReactElement {
   const {
     data,
@@ -46,21 +46,17 @@ export default function Board(props: Props): React.ReactElement {
   return (
     <div className="board">
       {in_play.map((cards: CardType[], i: number) => (
-        <div className="row" key={i} /* eslint-disable-line */>
+        <div className="row" key={i}>
           {
-            cards.map((card: CardType) => {
-              if (card.color === null) {
-                return <Empty />
-              }
-              return (
-                <Card
-                  selected={selected.indexOf(card) !== -1}
-                  key={`${card.color}${card.shape}${card.number}${card.shading}`}
-                  onClick={(): void => handleClick(card)}
-                  card={card}
-                />
-              )
-            })
+            cards.map((card: CardType, j: number) => (
+              <Card
+                selected={selected.indexOf(card) !== -1}
+                key={`${card.color}${card.shape}${card.number}${card.shading}${j}`}
+                onClick={(): void => handleClick(card)}
+                card={card}
+                hidden={card.color === null}
+              />
+            ))
           }
         </div>
       ))}
@@ -71,6 +67,7 @@ export default function Board(props: Props): React.ReactElement {
             selected={false}
             key={`${card.color}${card.shape}${card.number}${card.shading}`}
             card={card}
+            hidden={false}
           />
         ))}
       </div>

@@ -7,18 +7,27 @@ import Squiggle from './Squiggle'
 
 type Props = {
   card: CardType;
+  hidden: boolean;
   onClick?: () => void;
   selected: boolean;
 }
 
 export default function Card(props: Props): React.ReactElement {
-  const { card, onClick, selected } = props
+  const {
+    card,
+    hidden,
+    onClick,
+    selected,
+  } = props
+
   const {
     color,
     shape,
     number,
     shading,
   } = card
+
+  if (hidden) return <div className="hidden card" />
 
   let element: React.ReactElement
   switch (shape) {

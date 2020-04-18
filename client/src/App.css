@@ -71,10 +71,8 @@ input:focus {
     outline: none;
 }
 
-.empty {
-    width: 100px;
-    height: 150px;
-    margin: 4px;
+.hidden {
+    visibility: hidden;
 }
 
 svg {
