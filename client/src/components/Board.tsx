@@ -77,6 +77,7 @@ export default function Board(props: Props): React.ReactElement {
       <button
         type="button"
         onClick={(): void => handleRequest()}
+        disabled={remaining === 0}
       >
         Request more cards
       </button>

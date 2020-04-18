@@ -44,6 +44,11 @@ func (c *Context) handleMove(message message.Message, conn *websocket.Conn) erro
 		c.Game.GameOver = ptr.Bool(true)
 	}
 
+	// Reset request for new cards when a set is successful
+	for i := range c.Game.Players {
+		c.Game.Players[i].Request = ptr.Bool(false)
+	}
+
 	return nil
 }
 
