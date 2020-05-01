@@ -85,7 +85,7 @@ export default function App(): React.ReactElement {
     return (
       <div className="app">
         <div className="game-over">
-          <img src={GameOver} alt="game-over" />
+          <img width="100%" src={GameOver} alt="game-over" />
           <div>{`Winner: ${winners.join('& ')}`}</div>
           <button type="button" onClick={(): void => handleNew()}>Play again?</button>
         </div>
