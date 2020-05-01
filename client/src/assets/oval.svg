@@ -1,13 +1,71 @@
-<?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><svg viewBox="-10 5 120 205" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><defs xmlns="http://www.w3.org/1999/xhtml"><style type="text/css"><![CDATA[
-body { max-width: 400px; margin: auto; }
-.board { display: grid; grid-template-rows: repeat(3, 1fr); grid-template-columns: repeat(4, 1fr); grid-auto-flow: column; }
-.card { display: flex; flex-direction: column; justify-content: center; border: 1px solid black; border-radius: 10%; box-shadow: lightgray 3px 3px 3px; transition: box-shadow 0.1s ease 0s; padding: 10%; margin: 5%; }
-.message .card { display: inline-flex; height: 2em; width: 1.3em; padding: 0.1em; box-shadow: none; margin: 0px 0.2em; border-radius: 0.3em; vertical-align: middle; }
-.empty { border: medium none; box-shadow: none; }
-.selected { box-shadow: blue 0px 0px 7px; }
-.card svg { stroke-width: 3px; user-select: none; }
-.col0 svg { stroke: rgb(212, 183, 106); fill: rgb(212, 183, 106); }
-.col1 svg { stroke: rgb(119, 74, 142); fill: rgb(119, 74, 142); }
-.col2 svg { stroke: rgb(70, 140, 119); fill: rgb(70, 140, 119); }
-.sh0 svg { fill: none; }
-.sh1 svg { fill-opacity: 0.3; }]]></style></defs><g transform="translate(0 75)"><path d="M25 45 h50 a15 15 0 0 0 0 -30 h-50 a15 15 0 0 0 0 30"/></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   viewBox="0 0 210 297"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0beta2 (2b71d25, 2019-12-03)"
+   sodipodi:docname="oval.svg">
+  <defs
+     id="defs2">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 148.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="210 : 148.5 : 1"
+       inkscape:persp3d-origin="105 : 99 : 1"
+       id="perspective12" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="396.85039"
+     inkscape:cy="561.25984"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     inkscape:window-width="1389"
+     inkscape:window-height="855"
+     inkscape:window-x="51"
+     inkscape:window-y="23"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#000000;fill-rule:evenodd;stroke-width:0.174169"
+       id="rect1100"
+       width="130"
+       height="50"
+       x="40"
+       y="123.5"
+       ry="25" />
+  </g>
+</svg>
